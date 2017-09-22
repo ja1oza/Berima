@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<Berima.Models.Commodity>
 @{
     ViewData["Title"] = "Index";
 }
@@ -6,16 +6,19 @@
 <h2>商品一覧</h2>
 
 <div class="row">
-    @foreach (var commodity in (List<Commodity>)ViewData["commodities"])
+    @foreach (var commodity in Model)
     {
         <div class="col-md-4">
             <div class="row">
-                <div class="col-sm-4">
-                    <img src="@commodity.Icon" />
-                </div>
+                @if (commodity.Icon != null)
+                {
+                    <div class="col-sm-4">
+                        <img src="@Html.DisplayFor(modelItem => commodity.Icon)" />
+                    </div>
+                }
                 <div class="col-sm-8">
-                    <h2>@commodity.Name</h2>
-                    <p>@commodity.Price</p>
+                    <h2>@Html.DisplayFor(modelItem => commodity.Name)</h2>
+                    <p>@Html.DisplayFor(modelItem => commodity.Price)</p>
                 </div>
             </div>
         </div>

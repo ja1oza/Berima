@@ -19,6 +19,6 @@ namespace Berima.Models
 
         public string Name { get; }
         public string Price => _price + "円";
-        public string Icon => _icon.StringValue;
+        public string Icon => _icon?.StringValue;
     }
 }
