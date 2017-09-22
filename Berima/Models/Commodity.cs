@@ -8,16 +8,17 @@ namespace Berima.Models
     public class Commodity
     {
         private readonly int _price;
+        private readonly CommodityIcon _icon;
 
-        public Commodity(string name, int price, string icon)
+        public Commodity(string name, int price, CommodityIcon icon)
         {
             Name = name;
             _price = price;
-            Icon = icon;
+            _icon = icon;
         }
 
         public string Name { get; }
         public string Price => _price + "円";
-        public string Icon { get; }
+        public string Icon => _icon.StringValue;
     }
 }
