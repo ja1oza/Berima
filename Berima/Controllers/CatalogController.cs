@@ -25,5 +25,11 @@ namespace Berima.Controllers
                 .ToListAsync();
             return base.View(daoList.Select(dao => dao.Read()));
         }
+
+        public async Task<string> Buy()
+        {
+            await System.Threading.Tasks.Task.Delay(3000);
+            return "OK";
+        }
     }
 }
