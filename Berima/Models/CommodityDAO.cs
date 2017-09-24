@@ -16,7 +16,7 @@ namespace Berima.Models
 
         public Commodity Read()
         {
-            return new Commodity(Name, Price, Icon?.Read());
+            return new Commodity(Id, Name, Price, Icon?.Read());
         }
     }
 }

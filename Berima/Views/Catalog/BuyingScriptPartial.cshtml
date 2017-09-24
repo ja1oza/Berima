@@ -18,10 +18,14 @@
                 $button.attr("disabled", false);
             },
             success: function (result, textStatus, xhr) {
-                alert("OK");
+                alert(result);
             },
             error: function (xhr, textStatus, error) {
-                alert("Error");
+                if (error === "Unauthorized") {
+                    window.location.href = "/Account/Login";
+                } else {
+                    alert("Error: " + error);
+                }
             }
         });
     });

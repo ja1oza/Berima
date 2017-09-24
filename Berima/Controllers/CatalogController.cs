@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Berima.Models;
 using Berima.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Berima.Models.CatalogViewModels;
 
 namespace Berima.Controllers
 {
+    [Authorize]
     public class CatalogController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,18 +21,29 @@ namespace Berima.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var daoList = await _context.Commodities
                 .Include(dao => dao.Icon)
                 .ToListAsync();
-            return base.View(daoList.Select(dao => dao.Read()));
+            return View(new CatalogViewModel
+            {
+                Commodities = daoList.Select(dao => dao.Read())
+            });
         }
 
-        public async Task<string> Buy()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Buy(CatalogViewModel model)
         {
-            await System.Threading.Tasks.Task.Delay(3000);
-            return "OK";
+            var commodity = await _context.Commodities
+                .FirstAsync(dao => dao.Id == model.BuyingId);
+            if (commodity == null)
+            {
+                return NotFound(model.BuyingId);
+            }
+            return Ok();
         }
     }
 }
