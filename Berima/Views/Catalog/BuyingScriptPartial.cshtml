@@ -1,0 +1,32 @@
+﻿<script type="text/javascript">
+    $("form.buy-commodity").submit(function (event) {
+        event.preventDefault();
+
+        var $form = $(this);
+
+        var $button = $form.find("button");
+
+        $.ajax({
+            url: $form.attr("action"),
+            type: $form.attr("method"),
+            data: $form.serialize(),
+            timeout: 5000,
+            beforeSend: function (xhr, settings) {
+                $button.attr("disabled", true);
+            },
+            complete: function (xhr, textStatus) {
+                $button.attr("disabled", false);
+            },
+            success: function (result, textStatus, xhr) {
+                alert(result);
+            },
+            error: function (xhr, textStatus, error) {
+                if (error === "Unauthorized") {
+                    window.location.href = "/Account/Login";
+                } else {
+                    alert("Error: " + error);
+                }
+            }
+        });
+    });
+</script>
