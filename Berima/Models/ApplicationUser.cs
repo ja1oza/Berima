@@ -19,7 +19,7 @@ namespace Berima.Models
 
         public void Buy(Commodity commodity, ApplicationDbContext context)
         {
-            var purchase = new Purchase(this, commodity);
+            var purchase = new PurchaseSpec(this, commodity);
             context.Purchases.Add(PurchaseDAO.Create(purchase));
             Money -= commodity.Price;
         }

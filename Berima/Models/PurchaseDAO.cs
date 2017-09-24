@@ -9,13 +9,13 @@ namespace Berima.Models
 {
     public class PurchaseDAO
     {
-        public static PurchaseDAO Create(Purchase purchase)
+        public static PurchaseDAO Create(PurchaseSpec spec)
         {
             return new PurchaseDAO
             {
-                User = purchase.User,
-                Commodity = CommodityDAO.From(purchase.Commodity),
-                Price = purchase.Commodity.Price
+                User = spec.User,
+                Commodity = CommodityDAO.From(spec.Commodity),
+                Price = spec.Commodity.Price
             };
         }
 
@@ -28,5 +28,10 @@ namespace Berima.Models
         public int Price { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime DateTime { get; set; }
+
+        public Purchase Read()
+        {
+            return new Purchase(Commodity.Read(), Price, DateTime);
+        }
     }
 }
