@@ -1,0 +1,48 @@
+﻿@model Berima.Models.UserViewModels.HistoryViewModel
+@{
+    ViewData["Title"] = "History";
+}
+
+<h2>購入履歴</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Purchases.First().CommodityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Purchases.First().Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Purchases.First().DateTime)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Purchases)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CommodityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTime)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    @if (Model.HasPrevious)
+    {
+        <a asp-action="History" asp-route-page="@(Model.CurrentPage - 1)">前の @Model.ItemsPerPage 件</a>
+    }
+    @if (Model.HasNext)
+    {
+        <a asp-action="History" asp-route-page="@(Model.CurrentPage + 1)">次の @Model.ItemsPerPage 件</a>
+    }
+</div>
