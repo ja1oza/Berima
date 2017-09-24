@@ -52,9 +52,18 @@ namespace Berima.Controllers
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            var purchase = new Purchase(user, commodityDAO.Read());
-            _context.Purchases.Add(PurchaseDAO.Create(purchase));
-            await _context.SaveChangesAsync();
+            var commodity = commodityDAO.Read();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                if (!user.CanBuy(commodity))
+                {
+                    return BadRequest("お金が足りません");
+                }
+
+                user.Buy(commodity, _context);
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+            }
             return Ok();
         }
     }
