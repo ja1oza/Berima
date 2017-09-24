@@ -8,6 +8,14 @@ namespace Berima.Models
 {
     public class CommodityDAO
     {
+        public static CommodityDAO From(Commodity commodity)
+        {
+            return new CommodityDAO
+            {
+                Id = commodity.Id
+            };
+        }
+
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }

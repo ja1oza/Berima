@@ -8,6 +8,7 @@ using Berima.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Berima.Models.CatalogViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Berima.Controllers
 {
@@ -15,10 +16,13 @@ namespace Berima.Controllers
     public class CatalogController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CatalogController(ApplicationDbContext context)
+        public CatalogController(ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [AllowAnonymous]
@@ -37,12 +41,20 @@ namespace Berima.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Buy(CatalogViewModel model)
         {
-            var commodity = await _context.Commodities
-                .FirstAsync(dao => dao.Id == model.BuyingId);
-            if (commodity == null)
+            var commodityDAO = await _context.Commodities
+                .SingleOrDefaultAsync(c => c.Id == model.BuyingId);
+            if (commodityDAO == null)
             {
                 return NotFound(model.BuyingId);
             }
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            var purchase = new Purchase(user, commodityDAO.Read());
+            _context.Purchases.Add(PurchaseDAO.Create(purchase));
+            await _context.SaveChangesAsync();
             return Ok();
         }
     }
