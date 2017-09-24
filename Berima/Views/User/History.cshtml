@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Berima.Models.Purchase>
+﻿@model Berima.Models.UserViewModels.HistoryViewModel
 @{
     ViewData["Title"] = "History";
 }
@@ -9,18 +9,18 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CommodityName)
+                @Html.DisplayNameFor(model => model.Purchases.First().CommodityName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Purchases.First().Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateTime)
+                @Html.DisplayNameFor(model => model.Purchases.First().DateTime)
             </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Purchases)
         {
             <tr>
                 <td>
@@ -36,3 +36,13 @@
         }
     </tbody>
 </table>
+<div>
+    @if (Model.HasPrevious)
+    {
+        <a asp-action="History" asp-route-page="@(Model.CurrentPage - 1)">前の @Model.ItemsPerPage 件</a>
+    }
+    @if (Model.HasNext)
+    {
+        <a asp-action="History" asp-route-page="@(Model.CurrentPage + 1)">次の @Model.ItemsPerPage 件</a>
+    }
+</div>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Berima.Models;
 using Microsoft.EntityFrameworkCore;
+using Berima.Models.UserViewModels;
 
 namespace Berima.Controllers
 {
@@ -24,17 +25,30 @@ namespace Berima.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> History()
+        [HttpGet]
+        public async Task<IActionResult> History([FromQuery] int page = 0)
         {
+            var itemsPerPage = 20;
+
             var user = await _userManager.GetUserAsync(User);
+            var purchasesCount = await _context.Purchases
+                .CountAsync(dao => dao.User == user);
             var purchases = await _context.Purchases
                 .Where(dao => dao.User == user)
                 .OrderByDescending(dao => dao.DateTime)
-                .Take(5)
+                .Skip(page * itemsPerPage)
+                .Take(itemsPerPage)
                 .Include(dao => dao.Commodity)
                 .Select(dao => dao.Read())
                 .ToListAsync();
-            return View(purchases);
+            return View(new HistoryViewModel
+            {
+                Purchases = purchases,
+                CurrentPage = page,
+                HasPrevious = page > 0,
+                HasNext = purchasesCount > (page + 1) * itemsPerPage,
+                ItemsPerPage = itemsPerPage
+            });
         }
     }
 }
