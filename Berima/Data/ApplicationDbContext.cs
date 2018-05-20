@@ -37,11 +37,15 @@ namespace Berima.Data
                 .HasOne(p => p.CommodityGroupDAO)
                 .WithMany(g => g.Commodities)
                 .HasForeignKey(p => p.CommodityGroupDAOId);
+
+            builder.Entity<CartRecordDAO>()
+                .HasKey(c => new { c.UserId, c.CommodityId });
         }
 
         public DbSet<CommodityDAO> Commodities { get; set; }
         public DbSet<CommodityIconDAO> CommodityIcons { get; set; }
         public DbSet<PurchaseDAO> Purchases { get; set; }
         public DbSet<CommodityGroupDAO> Groups { get; set; }
+        public DbSet<CartRecordDAO> CartRecords { get; set; }
     }
 }
