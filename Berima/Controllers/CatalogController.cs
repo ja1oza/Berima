@@ -28,12 +28,19 @@ namespace Berima.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            var daoList = await _context.Commodities
-                .Include(dao => dao.Icon)
+            var daoList = await _context.Groups
+                .Include(dao => dao.Commodities)
+                .ThenInclude(ccg => ccg.CommodityDAO)
+                .ThenInclude(c => c.Icon)
+                .ToListAsync();
+            var freeCommodities = await _context.Commodities
+                .Where(c => c.Groups.Count() == 0)
+                .Include(c => c.Icon)
                 .ToListAsync();
             return View(new CatalogViewModel
             {
-                Commodities = daoList.Select(dao => dao.Read())
+                Groups = daoList.Select(dao => dao.Read()),
+                FreeCommodities = freeCommodities.Select(dao => dao.Read())
             });
         }
 

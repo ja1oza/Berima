@@ -24,10 +24,24 @@ namespace Berima.Data
             builder.Entity<PurchaseDAO>()
                 .Property(p => p.DateTime)
                 .HasDefaultValueSql("getdate()");
+
+            builder.Entity<CommodityCommodityGroupDAO>()
+                .HasKey(p => new { p.CommodityDAOId, p.CommodityGroupDAOId });
+
+            builder.Entity<CommodityCommodityGroupDAO>()
+                .HasOne(p => p.CommodityDAO)
+                .WithMany(c => c.Groups)
+                .HasForeignKey(p => p.CommodityDAOId);
+
+            builder.Entity<CommodityCommodityGroupDAO>()
+                .HasOne(p => p.CommodityGroupDAO)
+                .WithMany(g => g.Commodities)
+                .HasForeignKey(p => p.CommodityGroupDAOId);
         }
 
         public DbSet<CommodityDAO> Commodities { get; set; }
         public DbSet<CommodityIconDAO> CommodityIcons { get; set; }
         public DbSet<PurchaseDAO> Purchases { get; set; }
+        public DbSet<CommodityGroupDAO> Groups { get; set; }
     }
 }
