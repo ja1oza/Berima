@@ -21,6 +21,7 @@ namespace Berima.Models
         public string Name { get; set; }
         public int Price { get; set; }
         public CommodityIconDAO Icon { get; set; }
+        public List<CommodityCommodityGroupDAO> Groups { get; set; }
 
         public Commodity Read()
         {
