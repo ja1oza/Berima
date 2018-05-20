@@ -11,7 +11,7 @@
     <div class="row">
         @foreach (var commodity in group.Commodities)
         {
-            <form method="post" asp-action="Buy" class="buy-commodity">
+            <form method="post" asp-action="AddToCart" class="buy-commodity">
                 <div class="col-md-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -40,7 +40,7 @@
 <div class="row">
     @foreach (var commodity in Model.FreeCommodities)
     {
-        <form method="post" asp-action="Buy" class="buy-commodity">
+        <form method="post" asp-action="AddToCart" class="buy-commodity">
             <div class="col-md-4">
                 <div class="panel panel-default">
                     <div class="panel-heading">

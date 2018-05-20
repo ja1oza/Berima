@@ -46,6 +46,47 @@ namespace Berima.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(CatalogViewModel model)
+        {
+            var commodityDAO = await _context.Commodities
+                .SingleOrDefaultAsync(c => c.Id == model.BuyingId);
+            if (commodityDAO == null)
+            {
+                return NotFound(model.BuyingId);
+            }
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+            var commodity = commodityDAO.Read();
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                var record = await _context.CartRecords
+                    .SingleOrDefaultAsync(cr => cr.User.Equals(user)
+                    && cr.CommodityId == commodity.Id);
+                if (record == null)
+                {
+                    record = new CartRecordDAO
+                    {
+                        User = user,
+                        Commodity = commodityDAO,
+                        CommodityCount = 1
+                    };
+                    _context.CartRecords.Add(record);
+                }
+                else
+                {
+                    record.CommodityCount += 1;
+                }
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Buy(CatalogViewModel model)
         {
             var commodityDAO = await _context.Commodities
