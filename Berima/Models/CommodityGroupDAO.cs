@@ -12,5 +12,12 @@ namespace Berima.Models
         [Required]
         public string Name { get; set; }
         public List<CommodityCommodityGroupDAO> Commodities { get; set; }
+
+        public CommodityGroup Read()
+        {
+            return new CommodityGroup(Id, Name,
+                Commodities.Select(ccg => ccg.CommodityDAO.Read())
+                .ToList());
+        }
     }
 }

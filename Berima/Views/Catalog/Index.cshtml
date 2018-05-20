@@ -5,8 +5,40 @@
 
 <h2>商品一覧</h2>
 
+@foreach (var group in Model.Groups)
+{
+    <h3>@Html.DisplayFor(modelItem => group.Name)</h3>
+    <div class="row">
+        @foreach (var commodity in group.Commodities)
+        {
+            <form method="post" asp-action="Buy" class="buy-commodity">
+                <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="panel-title">@Html.DisplayFor(modelItem => commodity.Name)</div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="col-sm-4">
+                                @if (commodity.Icon != null)
+                                {
+                                    <img src="@Html.DisplayFor(modelItem => commodity.Icon)" width="64" />
+                                }
+                            </div>
+                            <div class="col-sm-8">
+                                <p>@Html.DisplayFor(modelItem => commodity.PriceString)</p>
+                                <button type="submit" class="btn btn-primary">購入</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="BuyingId" value="@commodity.Id" />
+            </form>
+        }
+    </div>
+}
+<h3>その他</h3>
 <div class="row">
-    @foreach (var commodity in Model.Commodities)
+    @foreach (var commodity in Model.FreeCommodities)
     {
         <form method="post" asp-action="Buy" class="buy-commodity">
             <div class="col-md-4">

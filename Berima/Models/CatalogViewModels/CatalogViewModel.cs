@@ -8,7 +8,8 @@ namespace Berima.Models.CatalogViewModels
 {
     public class CatalogViewModel
     {
-        public IEnumerable<Commodity> Commodities { get; set; }
+        public IEnumerable<CommodityGroup> Groups { get; set; }
+        public IEnumerable<Commodity> FreeCommodities { get; set; }
 
         [Required]
         public int BuyingId { get; set; }
