@@ -16,5 +16,11 @@ namespace Berima.Models
         public CommodityDAO Commodity { get; set; }
 
         public int CommodityCount { get; set; }
+
+        public CartRecord Read()
+        {
+            return new CartRecord(UserId,
+                Commodity.Read(), CommodityCount);
+        }
     }
 }

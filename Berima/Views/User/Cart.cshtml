@@ -1,0 +1,38 @@
+﻿@model Berima.Models.UserViewModels.CartViewModel
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h2>カート</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Records.First().CommodityName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Records.First().CommodityCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Records.First().Price)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Records)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CommodityName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CommodityCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

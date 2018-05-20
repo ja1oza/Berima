@@ -50,5 +50,20 @@ namespace Berima.Controllers
                 ItemsPerPage = itemsPerPage
             });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Cart()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var records = await _context.CartRecords
+                .Where(dao => dao.User == user)
+                .Include(dao => dao.Commodity)
+                .Select(dao => dao.Read())
+                .ToListAsync();
+            return View(new CartViewModel
+            {
+                Records = records
+            });
+        }
     }
 }
